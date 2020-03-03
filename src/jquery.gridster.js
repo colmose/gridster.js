@@ -749,14 +749,20 @@
 
         this.remove_from_gridmap(wgd);
 
+        if (silent) {
+            $el.remove();
+            if (callback) {
+                callback.call(this, el);
+            }
+            return;
+        }
+
         this.options.hide_element.call(this, $el, $.proxy(function(){
             $el.remove();
 
-            if (!silent) {
-                $nexts.each($.proxy(function(i, widget) {
-                    this.move_widget_up( $(widget), wgd.size_y );
-                }, this));
-            }
+            $nexts.each($.proxy(function(i, widget) {
+                this.move_widget_up( $(widget), wgd.size_y );
+            }, this));
 
             this.set_dom_grid_height();
 
