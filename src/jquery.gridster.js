@@ -32,6 +32,16 @@
         autogenerate_stylesheet: true,
         avoid_overlapped_widgets: true,
         auto_init: true,
+        show_element: function ($el) {
+            $el.fadeIn();
+        },
+        hide_element: function ($el, callback) {
+            if (callback) {
+                $el.fadeOut(callback);
+            } else {
+                $el.fadeOut();
+            }
+        },
         serialize_params: function($w, wgd) {
             return {
                 col: wgd.col,
@@ -370,7 +380,8 @@
 
         this.drag_api.set_limits(this.cols * this.min_widget_width);
 
-        return $w.fadeIn();
+        this.options.show_element.call(this, $w);
+        return $w;
     };
 
 
@@ -738,7 +749,7 @@
 
         this.remove_from_gridmap(wgd);
 
-        $el.fadeOut($.proxy(function() {
+        this.options.hide_element.call(this, $el, $.proxy(function(){
             $el.remove();
 
             if (!silent) {
