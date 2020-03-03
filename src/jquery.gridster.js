@@ -3135,6 +3135,10 @@
             this.drag_api.destroy();
         }
 
+        if (this.resize_api) {
+            this.resize_api.destroy();
+        }
+
         this.remove_style_tags();
 
         remove && this.$el.remove();
