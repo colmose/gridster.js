@@ -1,6 +1,6 @@
-/*! gridster.js - v0.5.6 - 2014-09-25
+/*! gridster.js - v0.5.8-sirensolutions-1 - 2020-03-19
 * http://gridster.net/
-* Copyright (c) 2014 ducksboard; Licensed MIT */
+* Copyright (c) 2020 ducksboard; Licensed MIT */
 
 ;(function(root, factory) {
 
@@ -879,6 +879,16 @@
         autogenerate_stylesheet: true,
         avoid_overlapped_widgets: true,
         auto_init: true,
+        show_element: function ($el) {
+            $el.fadeIn();
+        },
+        hide_element: function ($el, callback) {
+            if (callback) {
+                $el.fadeOut(callback);
+            } else {
+                $el.fadeOut();
+            }
+        },
         serialize_params: function($w, wgd) {
             return {
                 col: wgd.col,
@@ -1217,7 +1227,8 @@
 
         this.drag_api.set_limits(this.cols * this.min_widget_width);
 
-        return $w.fadeIn();
+        this.options.show_element.call(this, $w);
+        return $w;
     };
 
 
@@ -1585,14 +1596,20 @@
 
         this.remove_from_gridmap(wgd);
 
-        $el.fadeOut($.proxy(function() {
+        if (silent) {
+            $el.remove();
+            if (callback) {
+                callback.call(this, el);
+            }
+            return;
+        }
+
+        this.options.hide_element.call(this, $el, $.proxy(function(){
             $el.remove();
 
-            if (!silent) {
-                $nexts.each($.proxy(function(i, widget) {
-                    this.move_widget_up( $(widget), wgd.size_y );
-                }, this));
-            }
+            $nexts.each($.proxy(function(i, widget) {
+                this.move_widget_up( $(widget), wgd.size_y );
+            }, this));
 
             this.set_dom_grid_height();
 
@@ -3963,6 +3980,10 @@
 
         if (this.drag_api) {
             this.drag_api.destroy();
+        }
+
+        if (this.resize_api) {
+            this.resize_api.destroy();
         }
 
         this.remove_style_tags();
