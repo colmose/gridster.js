@@ -1,4 +1,4 @@
-/*! gridster.js - v0.5.8 - 2020-03-03
+/*! gridster.js - v0.5.8-sirensolutions-1 - 2020-03-19
 * http://gridster.net/
 * Copyright (c) 2020 ducksboard; Licensed MIT */
 
